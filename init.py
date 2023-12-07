@@ -3,6 +3,9 @@ from downloader import Downloader
 
 if __name__ == "__main__":
     
-   Downloader()
+   downloader = Downloader()
+   url = downloader.run()
+   song = downloader.execute(url)
+   
 
 
