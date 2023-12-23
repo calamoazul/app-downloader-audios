@@ -6,7 +6,7 @@ if __name__ == "__main__":
 
    app = Tk()
    window = Window(app)
-   window.mainloop()
+   app.mainloop()
 
 
 
