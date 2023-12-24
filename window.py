@@ -2,7 +2,9 @@ from tkinter import *
 from downloader import Downloader
 from PIL import ImageTk, Image
 import os.path
+import webbrowser
 from player import Player
+from tkinter import messagebox as Messagebox
 class Window():
 
     def __init__(self, app):
@@ -46,7 +48,8 @@ class Window():
         menubar = Menu(app, background='#313131', foreground='#fff', type='normal')
         menubar.config(background='#313131', bg='#313131')
         menuhelper = Menu(menubar, tearoff=0)
-        menuhelper.add_command(label="Datos del desarrollador")
+        menuhelper.add_command(label="Lista de canciones")
+        menuhelper.add_command(label="Datos del desarrollador", command=self.show_data)
         app.config(menu=menubar)
         menubar.add_command(label="Inicio", command=self.show_downloader)
         menubar.add_command(label="Reproductor", command=self.show_player)
@@ -69,5 +72,13 @@ class Window():
         self.download.grid_remove()
         container = self.player = Player().get_player(self.app)
         container.grid(row=0, column=1)
+
+    #Función para mostrar datos del desarrollador
+        
+    def show_data(self):
+        message = Messagebox.askyesno(message="Esta app ha sido desarrollada por Oscar Hernández", parent=self.app, icon='info', default=Messagebox.YES, detail="Para más información visitar la web Cálamo Azul")
+    
+        if(message == True):
+            webbrowser.open('https://calamoazul.com')
     
    
