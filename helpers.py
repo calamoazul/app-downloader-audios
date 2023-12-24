@@ -1,5 +1,7 @@
 import threading
 from tkinter import Frame, Label
+import os.path
+
  #Mostrar notificaciones
 
 def show_message(app, typeMessage, message):
@@ -16,6 +18,16 @@ def show_message(app, typeMessage, message):
     thread = threading.Timer(5, container.grid_remove)
     thread.start()
 
+#Método para mostrar nombres de canciones
+    
+def get_songs():
+    songs = []
+    dir_songs = os.path.join(os.path.dirname(__file__), 'songs')
+    with os.scandir(dir_songs) as songs_files:
+        for song in songs_files:
+            if song not in songs:
+                songs.append(song.name)
+    return songs
 #Clase para gestionar errores de desacarga
 
 class DownloadError(Exception):

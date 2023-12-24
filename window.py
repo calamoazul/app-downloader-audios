@@ -5,6 +5,8 @@ import os.path
 import webbrowser
 from player import Player
 from tkinter import messagebox as Messagebox
+from helpers import *
+from tkinter.ttk import Treeview as Table
 class Window():
 
     def __init__(self, app):
@@ -17,6 +19,7 @@ class Window():
         self.youtube = self.load_icon_youtube(app)
         self.download = Downloader().get_form_audio(app)
         self.player = None
+        self.songs = None
         self.app = app
 
 
@@ -45,10 +48,9 @@ class Window():
     #Cargar menús de la aplicación
 
     def load_menus(self, app):
-        menubar = Menu(app, background='#313131', foreground='#fff', type='normal')
-        menubar.config(background='#313131', bg='#313131')
+        menubar = Menu(app, bg="blue", fg="white")
         menuhelper = Menu(menubar, tearoff=0)
-        menuhelper.add_command(label="Lista de canciones")
+        menuhelper.add_command(label="Lista de canciones", command=self.show_songs)
         menuhelper.add_command(label="Datos del desarrollador", command=self.show_data)
         app.config(menu=menubar)
         menubar.add_command(label="Inicio", command=self.show_downloader)
@@ -62,15 +64,20 @@ class Window():
         self.app.config(background="#c5c5d5")
         if(self.player is not None):
             self.player.grid_remove()
+        if(self.songs is not None):
+            self.songs.grid_remove()
         self.youtube.grid(row=0, column=0)
         self.download.grid(row=0, column=1)
 
     #Función para cargar el reproductor   
     def show_player(self):
+        if(self.songs is not None):
+            self.songs.grid_remove()
         self.app.config(background="#313131")
         self.youtube.grid_remove()
         self.download.grid_remove()
-        container = self.player = Player().get_player(self.app)
+        self.player = Player().get_player(self.app)
+        container = self.player
         container.grid(row=0, column=1)
 
     #Función para mostrar datos del desarrollador
@@ -80,5 +87,23 @@ class Window():
     
         if(message == True):
             webbrowser.open('https://calamoazul.com')
-    
+
+    #Función para mostrar la lista de canciones en la aplicación
+            
+    def show_songs(self):
+        self.app.config(background="#c5c5d5")
+        if(self.player is not None):
+            self.player.grid_remove()
+        self.download.grid_remove()
+        self.youtube.grid_remove()
+        songs = get_songs()
+        self.songs = Frame(self.app, bg="#313131", padx=20)
+        container = self.songs
+        table = Table(container, height=12)
+        table.heading('#0', text='Canción', anchor="center")
+        table.column('#0', stretch=True, width=500, anchor='center')
+        for index, song in enumerate(songs):
+            table.insert('', index=index, text=song)
+        table.pack()
+        container.grid(row=0, column=0)
    
