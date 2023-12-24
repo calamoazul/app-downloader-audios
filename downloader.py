@@ -3,6 +3,8 @@ from tkinter import *
 import tkinter.font as TkFont
 import os.path
 from helpers import *
+from moviepy.editor import AudioFileClip
+
 
 
 #Clase que gestiona la acción de descarga
@@ -38,12 +40,14 @@ class Downloader():
         link = self.input.get()
         
         try:
-            self.execute(link)
-            message = self.show_message(app, 'success', 'Canción descargada con éxito')
+            mp4 = self.execute(link)
+            message = show_message(app, 'success', 'Canción descargada con éxito')
+            self.convert_mp4_to_mp3(mp4['path'], mp4['title'])
         except DownloadError as error:
-            message = self.show_message(app, 'danger', error)
+            message = show_message(app, 'danger', error)
         except Exception as error:
-            message = self.show_message(app, 'danger', error)
+            message = show_message(app, 'danger', error)
+            print(error)
 
     #Marcar mensaje de descarga
     def execute(self, url):
@@ -52,13 +56,23 @@ class Downloader():
         else:
             py = YouTube(url)
             song = py.streams.filter(only_audio=True).first()
-            song.download(self.dir)
-
-            if(song.title == None):
-                return False
+            mp4 = song.download(self.dir)
+            path_mp4 = os.path.join(self.dir, py.title + '.mp4')
+            print(path_mp4)
+            if(mp4 == None):
+                raise DownloadError('No se ha generado el mp4')
             else:
-                return song.title
-    
+                return {'title': py.title, 'path': path_mp4, 'song': song}
+            
+    def convert_mp4_to_mp3(self, path, title):
+        if(os.path.isfile(path)):
+            song = AudioFileClip(path)
+            song.write_audiofile(os.path.join(self.dir, title + '.mp3'))
+            song.close()
+            os.remove(path)
+
+
+            
     
 
     

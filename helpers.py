@@ -2,7 +2,7 @@ import threading
 from tkinter import Frame, Label
  #Mostrar notificaciones
 
-def show_message(self, app, typeMessage, message):
+def show_message(app, typeMessage, message):
     if(typeMessage == 'success'):
         color = "#22C55E"
     elif(typeMessage == 'danger'):
@@ -13,7 +13,7 @@ def show_message(self, app, typeMessage, message):
     text = Label(container, background=color, text=message, font="Poppins", foreground="#fff", justify="center")
     text.grid(column=0, row=0)
     container.grid(row=4, column=0)
-    thread = threading.Timer(2, container.grid_remove)
+    thread = threading.Timer(5, container.grid_remove)
     thread.start()
 
 #Clase para gestionar errores de desacarga
